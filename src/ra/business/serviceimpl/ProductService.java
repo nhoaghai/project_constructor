@@ -19,10 +19,10 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product findById(Long id) {
-        return products.stream().filter(pro -> pro.getProductId().equals(id))
-                .findFirst().orElse(null);
+    public Product findById(String id) {
+        return products.stream().filter(product -> product.getProductId().equalsIgnoreCase(id)).findFirst().orElse(null);
     }
+
     @Override
     public Product findByName(String name) {
         Product product = products.stream().filter(pro -> pro.getProductName().equalsIgnoreCase(name)).findFirst().orElse(null);
@@ -45,15 +45,17 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void toggleStatusById(Long id) {
+    public void deleteById(String id) {
         Product product = findById(id);
-        product.setStatus();
-        IOFile.writeToFile(PRODUCT_PATH, products);
+        if (product != null){
+            products.remove(product);
+        }else {
+            System.err.println("Could not find id");
+        }
     }
 
     @Override
-    public Long getNewId() {
-        return products.stream().map(Product::getProductId)
-                .max(Long::compare).orElse(0L)+1;
+    public Product findByCatalog(Catalog catalog) {
+        return products.stream().filter(product -> product.getCatalog().equals(catalog)).findFirst().orElse(null);
     }
 }

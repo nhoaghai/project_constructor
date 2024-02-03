@@ -9,8 +9,9 @@ import java.util.List;
 
 import static ra.business.config.Constants.CATALOG_PATH;
 
-public class CatalogService implements ICatalogService, Serializable, Comparable {
+public class CatalogService implements ICatalogService, Serializable {
     private final List<Catalog> catalogs;
+    public static final ProductService productService =new ProductService();
 
     public CatalogService() {
         this.catalogs = IOFile.readFromFile(CATALOG_PATH);
@@ -22,14 +23,8 @@ public class CatalogService implements ICatalogService, Serializable, Comparable
     }
 
     @Override
-    public Catalog findById(Long id) {
-        return catalogs.stream().filter(ca -> ca.getCatalogId().equals(id))
-                .findFirst().orElse(null);
-    }
-
-    @Override
-    public Catalog findByName(String name) {
-        return catalogs.stream().filter(cat -> cat.getCatalogName().toLowerCase().matches("(.*)"+name.toLowerCase()+"(.*)")).findFirst().orElse(null);
+    public Catalog findById(Integer id) {
+        return catalogs.stream().filter(catalog -> catalog.getCatalogId().equals(id)).findFirst().orElse(null);
     }
 
     @Override
@@ -46,14 +41,16 @@ public class CatalogService implements ICatalogService, Serializable, Comparable
     }
 
     @Override
-    public void toggleStatusById(Long id) {
-        Catalog catalog = findById(id);
-        catalog.setStatus();
-        IOFile.writeToFile(CATALOG_PATH, catalogs);
-    }
+    public void deleteById(Integer id) {
 
-    @Override
-    public int compareTo(Object o) {
-        return 0;
+        if (productService.findByCatalog(findById(id)) != null){
+            System.err.println("Catalog tồn tại product ko thể xóa");
+        }
+        Catalog catalog = findById(id);
+        if (catalog != null){
+            catalogs.remove(catalog);
+        }else {
+            System.err.println("Could not find id");
+        }
     }
 }

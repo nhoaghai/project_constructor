@@ -4,38 +4,32 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Product implements Serializable {
-    private Long productId;
+    private String productId;
     private String productName;
-    private Long categoryId;
-    private String description;
     private double unitPrice;
+    private String description;
     private int stock;
-    private LocalDate create_at;
-    private LocalDate update_at;
+    private Catalog catalog;
     private boolean status = true;
 
     public Product() {
     }
 
-    public Product(Long productId, String productName, Long categoryId,
-                   String description, double unitPrice, int stock,
-                   LocalDate create_at, LocalDate update_at, boolean status) {
+    public Product(String productId, String productName, double unitPrice, String description, int stock, Catalog catalog, boolean status) {
         this.productId = productId;
         this.productName = productName;
-        this.categoryId = categoryId;
-        this.description = description;
         this.unitPrice = unitPrice;
+        this.description = description;
         this.stock = stock;
-        this.create_at = create_at;
-        this.update_at = update_at;
+        this.catalog = catalog;
         this.status = status;
     }
 
-    public Long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -47,12 +41,12 @@ public class Product implements Serializable {
         this.productName = productName;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public String getDescription() {
@@ -63,14 +57,6 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public int getStock() {
         return stock;
     }
@@ -79,41 +65,31 @@ public class Product implements Serializable {
         this.stock = stock;
     }
 
-    public LocalDate getCreate_at() {
-        return create_at;
+    public Catalog getCatalog() {
+        return catalog;
     }
 
-    public void setCreate_at(LocalDate create_at) {
-        this.create_at = create_at;
-    }
-
-    public LocalDate getUpdate_at() {
-        return update_at;
-    }
-
-    public void setUpdate_at(LocalDate update_at) {
-        this.update_at = update_at;
+    public void setCatalog(Catalog catalog) {
+        this.catalog = catalog;
     }
 
     public boolean isStatus() {
         return status;
     }
 
-    public void setStatus() {
-        this.status = !status;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "productId=" + productId +
+                "productId='" + productId + '\'' +
                 ", productName='" + productName + '\'' +
-                ", categoryId=" + categoryId +
-                ", description='" + description + '\'' +
                 ", unitPrice=" + unitPrice +
+                ", description='" + description + '\'' +
                 ", stock=" + stock +
-                ", create_at=" + create_at +
-                ", update_at=" + update_at +
+                ", catalog=" + catalog +
                 ", status=" + status +
                 '}';
     }

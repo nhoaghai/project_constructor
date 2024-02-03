@@ -4,28 +4,22 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Catalog implements Serializable {
-    private Long catalogId;
+    private Integer catalogId;
     private String catalogName;
-    private String description;
-    private LocalDateTime created_at;
-    private boolean status = true;
 
     public Catalog() {
     }
 
-    public Catalog(Long catalogId, String catalogName, String description, boolean status, LocalDateTime created_at) {
+    public Catalog(Integer catalogId, String catalogName) {
         this.catalogId = catalogId;
         this.catalogName = catalogName;
-        this.description = description;
-        this.created_at = created_at;
-        this.status = status;
     }
 
-    public Long getCatalogId() {
+    public Integer getCatalogId() {
         return catalogId;
     }
 
-    public void setCatalogId(Long catalogId) {
+    public void setCatalogId(Integer catalogId) {
         this.catalogId = catalogId;
     }
 
@@ -37,38 +31,11 @@ public class Catalog implements Serializable {
         this.catalogName = catalogName;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(){
-        this.status = !status;
-    }
-
     @Override
     public String toString() {
         return "Catalog{" +
                 "catalogId=" + catalogId +
                 ", catalogName='" + catalogName + '\'' +
-                ", description='" + description + '\'' +
-                ", created_at=" + created_at +
-                ", status=" + status +
                 '}';
     }
 }

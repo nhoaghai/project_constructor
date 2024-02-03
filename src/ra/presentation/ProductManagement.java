@@ -11,37 +11,40 @@ import java.time.LocalDateTime;
 
 public class ProductManagement {
     public static final ProductService productService = new ProductService();
-    public static CatalogManagement catalogManagement;
+    public static final CatalogService catalogService = new CatalogService();
 
     public static void run() {
         while (true) {
             System.out.println("======= Product Management ========");
-            System.out.println("1. Hiển thị danh sách sản phẩm");
-            System.out.println("2. Thêm mới sản phẩm");
-            System.out.println("3. Chỉnh sửa thông tin sản phẩm");
-            System.out.println("4. Ẩn hiện danh mục theo mã danh mục");
+            System.out.println("1. Thêm mới sản phẩm");
+            System.out.println("2. Hiển thị danh sách sản phẩm");
+            System.out.println("3. Hiển thị danh sách sản phẩm theo giá giảm dần");
+            System.out.println("4. Xóa sản phẩm theo mã");
             System.out.println("5. Tìm kiếm sản phẩm theo tên ");
-            System.out.println("6. Quay lại");
+            System.out.println("5. Chỉnh sửa sản phẩm theo mã ");
+            System.out.println("0. Quay lại");
             System.out.println("==================================");
 
             byte choice = InputMethods.getByte();
             switch (choice) {
                 case 1:
-                    displayProduct();
-                    break;
-                case 2:
                     addNewProduct();
                     break;
+                case 2:
+                    displayProduct();
+                    break;
                 case 3:
-                    editProduct();
                     break;
                 case 4:
-                    toggleStatusById();
+                    deleteById();
                     break;
                 case 5:
                     searchByName();
                     break;
                 case 6:
+                    editProduct();
+                    break;
+                case 0:
                     return;
                 default:
                     System.err.println("Nhập không đúng lựa chọn");
@@ -69,15 +72,14 @@ public class ProductManagement {
             Product product = new Product();
             CatalogManagement.displayCatalog();
             System.out.println("Chọn danh mục sản phẩm: ");
-            product.setCategoryId(InputMethods.getLong());
+            product.setCatalog(catalogService.findById(InputMethods.getInteger()));
             System.out.println("Nhập id sản phẩm mới: ");
-            Long newId = InputMethods.getLong();
+            String newId = InputMethods.getString();
 
             if (productService.findById(newId) != null){
                 System.out.println("Id đã tồn tại");
             }
             else{
-                productService.getNewId();
                 product.setProductId(newId);
                 System.out.println("Nhập tên sản phẩm mới: ");
                 product.setProductName(InputMethods.getString());
@@ -86,9 +88,7 @@ public class ProductManagement {
                 System.out.println("Nhập đơn giá: ");
                 product.setUnitPrice(InputMethods.getDouble());
                 System.out.println("Nhập số lượng còn trong kho: ");
-                product.setStock(InputMethods.getInteger());
-                product.setCreate_at(LocalDate.now());
-                product.setUpdate_at(LocalDate.now());
+                product.setStock(InputMethods.getInteger());;
                 productService.save(product);
             }
             System.out.println("Bạn có muốn thêm tiếp sản phẩm: ");
@@ -109,37 +109,32 @@ public class ProductManagement {
 
     //Tìm kiếm danh mục theo tên
     public static void searchByName() {
-        System.out.println("Nhập tên danh mục cần tìm kiếm");
+        System.out.println("Nhập tên sản phẩm cần tìm kiếm");
         String name = InputMethods.getString();
         System.out.println(productService.findByName(name));
     }
 
     public static void editProduct() {
         System.out.println("Nhập vào id product muốn sửa");
-        Long newId = InputMethods.getLong();
+        String newId = InputMethods.getString();
         Product product = productService.findById(newId);
         if (product == null) {
             System.out.println("Không tìm thấy");
         } else {
             System.out.println("Nhập vào tên product mới");
             product.setProductName(InputMethods.getString());
-            System.out.println("Nhập phân Id loại sản phẩm mới: ");
-            product.setCategoryId(InputMethods.getLong());
             System.out.println("Nhập vào mô tả mới: ");
             product.setDescription(InputMethods.getString());
             System.out.println("Nhập đơn giá mới: ");
             product.setUnitPrice(InputMethods.getByte());
             System.out.println("Nhập số lượng còn trong kho: ");
             product.setStock(InputMethods.getByte());
-            product.setUpdate_at(LocalDate.now());
             productService.save(product);
         }
     }
-
-    public static void toggleStatusById() {
+    public static void deleteById(){
+        productService.deleteById(InputMethods.getString());
+        System.out.println("Delete successfully");
         displayProduct();
-        System.out.println("Nhập id danh mục cần thay đổi");
-        Long id = InputMethods.getLong();
-        productService.toggleStatusById(id);
     }
 }

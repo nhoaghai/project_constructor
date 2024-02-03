@@ -1,6 +1,7 @@
 package ra.presentation;
 
 import ra.business.model.Catalog;
+import ra.business.model.Product;
 import ra.business.serviceimpl.CatalogService;
 import ra.business.ultil.InputMethods;
 
@@ -12,32 +13,28 @@ public class CatalogManagement {
     public static void run() {
         while (true) {
             System.out.println("=======Catalog Management ========");
-            System.out.println("1. Hiển thị danh mục");
-            System.out.println("2. Tạo mới danh mục");
-            System.out.println("3. Tìm kiếm danh mục theo tên");
-            System.out.println("4. Chỉnh sửa thông tin danh mục");
-            System.out.println("5. Ẩn/hiện danh mục theo mã danh mục");
-            System.out.println("6. Quay lại");
+            System.out.println("1. Tạo mới danh mục");
+            System.out.println("2. Hiển thị danh mục");
+            System.out.println("3. Chỉnh sửa tên danh mục");
+            System.out.println("4. Xóa danh mục theo id");
+            System.out.println("0. Quay lại");
             System.out.println("==================================");
 
             byte choice = InputMethods.getByte();
             switch (choice) {
                 case 1:
-                    displayCatalog();
-                    break;
-                case 2:
                     addNewCatalog();
                     break;
+                case 2:
+                    displayCatalog();
+                    break;
                 case 3:
-                    searchByName();
+                    editCatalogName();
                     break;
                 case 4:
-                    editCatalog();
+                    deleteById();
                     break;
-                case 5:
-                    toggleStatusById();
-                    break;
-                case 6:
+                case 0:
                     return;
                 default:
                     System.err.println("Nhập không đúng lựa chọn");
@@ -45,23 +42,22 @@ public class CatalogManagement {
             }
         }
     }
-    //Hiển thị danh sách danh mục
+
     public static void displayCatalog() {
-        if (catalogService.findAll().isEmpty()){
-            System.err.println("Danh mục chống");
+        for (Catalog catalog : catalogService.findAll()) {
+            if (catalog != null) {
+                System.out.println(catalog);
+            } else {
+                System.out.println("Danh sách sản phẩm chống");
+            }
         }
-        for (Catalog cat : catalogService.findAll()) {
-                if (cat.isStatus()) {
-                    System.out.println(cat);
-                }
-        }
-        //catalogService.findAll();
     }
+
     //Thêm mới danh mục
     public static void addNewCatalog() {
         while (true) {
             System.out.println("Nhập id Catalog mới: ");
-            Long newId = InputMethods.getLong();
+            Integer newId = InputMethods.getInteger();
 
             if (catalogService.findById(newId) != null) {
                 System.out.println("Id đã tồn tại");
@@ -70,9 +66,6 @@ public class CatalogManagement {
                 catalog.setCatalogId(newId);
                 System.out.println("Nhập tên Catalog mới: ");
                 catalog.setCatalogName(InputMethods.getString());
-                System.out.println("Nhập mô tả mới: ");
-                catalog.setDescription(InputMethods.getString());
-                catalog.setCreated_at(LocalDateTime.now());
                 catalogService.save(catalog);
             }
             System.out.println("Bạn có muốn thêm tiếp danh mục: ");
@@ -90,30 +83,22 @@ public class CatalogManagement {
             }
         }
     }
-    //Tìm kiếm danh mục theo tên
-    public static void searchByName(){
-        System.out.println("Nhập tên danh mục cần tìm kiếm");
-        String name = InputMethods.getString();
-        System.out.println(catalogService.findByName(name));
-    }
-    public static void editCatalog(){
+
+    public static void editCatalogName() {
         System.out.println("Nhập vào id danh mục muốn sửa");
-        Long newId = InputMethods.getLong();
-        Catalog catalog= catalogService.findById(newId);
-        if (catalog == null){
+        Integer newId = InputMethods.getInteger();
+        Catalog catalog = catalogService.findById(newId);
+        if (catalog == null) {
             System.out.println("Không tìm thấy");
-        }else {
+        } else {
             System.out.println("Nhập vào tên catalog mới");
             catalog.setCatalogName(InputMethods.getString());
-            System.out.println("Nhập vào mô tả mới: ");
-            catalog.setDescription(InputMethods.getString());
             catalogService.save(catalog);
         }
     }
-    public static void toggleStatusById(){
-        displayCatalog();
-        System.out.println("Nhập id danh mục cần thay đổi");
-        Long id = InputMethods.getLong();
-        catalogService.toggleStatusById(id);
+
+    public static void deleteById() {
+        System.out.println("Nhập id sản phẩm muốn xóa");
+        catalogService.deleteById(InputMethods.getInteger());
     }
 }
