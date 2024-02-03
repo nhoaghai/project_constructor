@@ -47,34 +47,47 @@ public class CatalogManagement {
     }
     //Hiển thị danh sách danh mục
     public static void displayCatalog() {
+        if (catalogService.findAll().isEmpty()){
+            System.err.println("Danh mục chống");
+        }
         for (Catalog cat : catalogService.findAll()) {
-            if (cat != null) {
                 if (cat.isStatus()) {
                     System.out.println(cat);
                 }
-            }else{
-                System.out.println("Danh mục chống");
-            }
         }
         //catalogService.findAll();
     }
     //Thêm mới danh mục
     public static void addNewCatalog() {
-        System.out.println("Nhập id Catalog mới: ");
-        Long newId = InputMethods.getLong();
+        while (true) {
+            System.out.println("Nhập id Catalog mới: ");
+            Long newId = InputMethods.getLong();
 
-        if (catalogService.findById(newId) != null){
-            System.out.println("Id đã tồn tại");
-        }
-        else{
-            Catalog catalog = new Catalog();
-            catalog.setCatalogId(newId);
-            System.out.println("Nhập tên Catalog mới: ");
-            catalog.setCatalogName(InputMethods.getString());
-            System.out.println("Nhập mô tả mới: ");
-            catalog.setDescription(InputMethods.getString());
-            catalog.setCreated_at(LocalDateTime.now());
-            catalogService.save(catalog);
+            if (catalogService.findById(newId) != null) {
+                System.out.println("Id đã tồn tại");
+            } else {
+                Catalog catalog = new Catalog();
+                catalog.setCatalogId(newId);
+                System.out.println("Nhập tên Catalog mới: ");
+                catalog.setCatalogName(InputMethods.getString());
+                System.out.println("Nhập mô tả mới: ");
+                catalog.setDescription(InputMethods.getString());
+                catalog.setCreated_at(LocalDateTime.now());
+                catalogService.save(catalog);
+            }
+            System.out.println("Bạn có muốn thêm tiếp danh mục: ");
+            System.out.println("1. Có");
+            System.out.println("2. Thoát");
+            byte choice = InputMethods.getByte();
+            switch (choice) {
+                case 1:
+                    break;
+                case 2:
+                    return;
+                default:
+                    System.err.println("Nhập không đúng lựa chọn");
+                    System.out.println("Vui lòng nhập lại");
+            }
         }
     }
     //Tìm kiếm danh mục theo tên
