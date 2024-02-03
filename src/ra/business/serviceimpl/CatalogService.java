@@ -29,12 +29,7 @@ public class CatalogService implements ICatalogService, Serializable, Comparable
 
     @Override
     public Catalog findByName(String name) {
-        Catalog catalog = catalogs.stream().filter(cat -> cat.getCatalogName().toLowerCase()
-                .contains(name.toLowerCase())).findFirst().orElse(null);
-        if (catalogs == null){
-            System.out.println("Nhâp sai tên hoặc tên không tồn tại");
-        }
-        return catalog;
+        return catalogs.stream().filter(cat -> cat.getCatalogName().toLowerCase().matches("(.*)"+name.toLowerCase()+"(.*)")).findFirst().orElse(null);
     }
 
     @Override

@@ -2,6 +2,7 @@ package ra.presentation;
 
 import ra.business.model.Catalog;
 import ra.business.model.Product;
+import ra.business.serviceimpl.CatalogService;
 import ra.business.serviceimpl.ProductService;
 import ra.business.ultil.InputMethods;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 public class ProductManagement {
     public static final ProductService productService = new ProductService();
+    public static CatalogManagement catalogManagement;
 
     public static void run() {
         while (true) {
@@ -25,7 +27,7 @@ public class ProductManagement {
             byte choice = InputMethods.getByte();
             switch (choice) {
                 case 1:
-                    displayProdct();
+                    displayProduct();
                     break;
                 case 2:
                     addNewProduct();
@@ -49,7 +51,7 @@ public class ProductManagement {
     }
 
     //Hiển thị danh sách danh mục
-    public static void displayProdct() {
+    public static void displayProduct() {
         for (Product pro : productService.findAll()) {
             if (pro != null) {
                 if (pro.isStatus()) {
@@ -64,6 +66,10 @@ public class ProductManagement {
     //Thêm mới danh mục
     public static void addNewProduct() {
         while (true){
+            Product product = new Product();
+            CatalogManagement.displayCatalog();
+            System.out.println("Chọn danh mục sản phẩm: ");
+            product.setCategoryId(InputMethods.getLong());
             System.out.println("Nhập id sản phẩm mới: ");
             Long newId = InputMethods.getLong();
 
@@ -71,13 +77,10 @@ public class ProductManagement {
                 System.out.println("Id đã tồn tại");
             }
             else{
-                Product product = new Product();
                 productService.getNewId();
                 product.setProductId(newId);
                 System.out.println("Nhập tên sản phẩm mới: ");
                 product.setProductName(InputMethods.getString());
-                System.out.println("Nhập phân loại sản phẩm mới: ");
-                product.setCategoryId(InputMethods.getLong());
                 System.out.println("Nhập mô tả sản phẩm mới: ");
                 product.setDescription(InputMethods.getString());
                 System.out.println("Nhập đơn giá: ");
@@ -117,7 +120,6 @@ public class ProductManagement {
         Product product = productService.findById(newId);
         if (product == null) {
             System.out.println("Không tìm thấy");
-            return;
         } else {
             System.out.println("Nhập vào tên product mới");
             product.setProductName(InputMethods.getString());
@@ -135,7 +137,7 @@ public class ProductManagement {
     }
 
     public static void toggleStatusById() {
-        displayProdct();
+        displayProduct();
         System.out.println("Nhập id danh mục cần thay đổi");
         Long id = InputMethods.getLong();
         productService.toggleStatusById(id);
